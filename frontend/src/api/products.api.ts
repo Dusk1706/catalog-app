@@ -5,6 +5,9 @@ import type {
   CreateProductPayload,
   UpdateProductPayload,
   ProductQueryParams,
+  FilterOptions,
+  Color,
+  Talla,
 } from '../types/product';
 
 export const productsApi = {
@@ -30,5 +33,41 @@ export const productsApi = {
 
   delete: async (id: number): Promise<void> => {
     await apiClient.delete(`/products/${id}`);
+  },
+
+  getFilterOptions: async (): Promise<FilterOptions> => {
+    const { data } = await apiClient.get<{ data: FilterOptions }>('/products/filter-options');
+    return data.data;
+  },
+
+  uploadPhoto: async (file: File): Promise<string> => {
+    const formData = new FormData();
+    formData.append('file', file);
+    const { data } = await apiClient.post<{ data: { url: string } }>('/upload', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return data.data.url;
+  },
+};
+
+export const catalogApi = {
+  getColores: async (): Promise<Color[]> => {
+    const { data } = await apiClient.get<{ data: Color[] }>('/catalog/colores');
+    return data.data;
+  },
+
+  createColor: async (nombre: string): Promise<Color> => {
+    const { data } = await apiClient.post<{ data: Color }>('/catalog/colores', { nombre });
+    return data.data;
+  },
+
+  getTallas: async (): Promise<Talla[]> => {
+    const { data } = await apiClient.get<{ data: Talla[] }>('/catalog/tallas');
+    return data.data;
+  },
+
+  createTalla: async (valor: string): Promise<Talla> => {
+    const { data } = await apiClient.post<{ data: Talla }>('/catalog/tallas', { valor });
+    return data.data;
   },
 };

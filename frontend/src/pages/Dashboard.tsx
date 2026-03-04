@@ -6,7 +6,8 @@ import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { Pagination } from '../components/ui/Pagination';
 import { ProductFilters } from '../components/products/ProductFilters';
 import { ProductTable } from '../components/products/ProductTable';
-import type { Product, CreateProductPayload, UpdateProductPayload, ProductType } from '../types/product';
+import { PlusIcon } from '../components/ui/Icons';
+import type { Product, CreateProductPayload, UpdateProductPayload, ProductQueryParams } from '../types/product';
 
 const ProductFormModal = lazy(() =>
   import('../components/products/ProductFormModal').then((m) => ({ default: m.ProductFormModal })),
@@ -34,8 +35,8 @@ export function Dashboard() {
     updateFilters({ search: search || undefined });
   };
 
-  const handleFilter = (tipo?: ProductType) => {
-    updateFilters({ tipo });
+  const handleFilter = (newFilters: Partial<ProductQueryParams>) => {
+    updateFilters(newFilters);
   };
 
   const handleEdit = (product: Product) => {
@@ -76,9 +77,7 @@ export function Dashboard() {
             onClick={handleCreate}
             className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-            </svg>
+            <PlusIcon />
             Nuevo Producto
           </button>
         </div>
@@ -89,7 +88,7 @@ export function Dashboard() {
           <div className="flex-1">
             <SearchBar onSearch={handleSearch} />
           </div>
-          <ProductFilters activeType={filters.tipo} onFilter={handleFilter} />
+          <ProductFilters filters={filters} onFilter={handleFilter} />
         </div>
 
         {isPending ? (

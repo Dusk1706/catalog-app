@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { SearchIcon } from './Icons';
 
 interface SearchBarProps {
   onSearch: (term: string) => void;
@@ -21,9 +22,7 @@ export function SearchBar({ onSearch, placeholder = 'Buscar por nombre o colorâ€
   return (
     <div className="relative">
       <span className="absolute inset-y-0 left-3 flex items-center text-gray-400">
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
-        </svg>
+        <SearchIcon />
       </span>
       <input
         type="text"
