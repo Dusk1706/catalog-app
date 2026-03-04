@@ -1,5 +1,6 @@
 import {
   IsEnum,
+  IsInt,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -7,6 +8,7 @@ import {
   IsString,
   MaxLength,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 import { ProductType } from '../../common/enums/product-type.enum';
 
 export class CreateProductDto {
@@ -15,15 +17,23 @@ export class CreateProductDto {
   @MaxLength(100)
   nombre: string;
 
-  @IsString()
-  @IsNotEmpty({ message: 'El color es obligatorio' })
-  @MaxLength(50)
-  color: string;
+  @Type(() => Number)
+  @IsInt({ message: 'El colorId debe ser un entero válido' })
+  colorId: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt({ message: 'El tallaId debe ser un entero válido' })
+  tallaId?: number;
 
   @IsString()
   @IsOptional()
-  @MaxLength(20)
-  talla?: string;
+  foto?: string;
+
+  @IsString()
+  @IsOptional()
+  @MaxLength(500)
+  descripcion?: string;
 
   @IsEnum(ProductType, {
     message: 'El tipo debe ser ZAPATO o BOLSA',

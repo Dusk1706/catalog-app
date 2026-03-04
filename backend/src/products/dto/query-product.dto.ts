@@ -1,4 +1,4 @@
-import { IsEnum, IsOptional, IsString, IsInt, Min } from 'class-validator';
+import { IsEnum, IsOptional, IsString, IsInt, Min, IsNumber } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ProductType } from '../../common/enums/product-type.enum';
 
@@ -12,6 +12,28 @@ export class QueryProductDto {
     message: 'El tipo debe ser ZAPATO o BOLSA',
   })
   tipo?: ProductType;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(0)
+  precioMin?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(0)
+  precioMax?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  tallaId?: number;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  colorId?: number;
 
   @IsOptional()
   @Type(() => Number)

@@ -31,6 +31,11 @@ export class ProductsController {
     return this.productsService.findAll(query);
   }
 
+  @Get('filter-options')
+  getFilterOptions() {
+    return this.productsService.getFilterOptions();
+  }
+
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.productsService.findOne(id);
