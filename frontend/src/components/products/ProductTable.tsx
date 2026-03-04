@@ -1,6 +1,11 @@
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { Product } from '../../types/product';
 import { ProductType } from '../../types/product';
+import { formatPrice } from '../../utils/format';
+import { EditIcon, TrashIcon } from '../ui/Icons';
+import { ProductTypeBadge } from './ProductTypeBadge';
+import { ProductThumbnail } from './ProductThumbnail';
 
 interface ProductTableProps {
   products: Product[];
@@ -14,25 +19,35 @@ interface ProductRowProps {
   onDelete: (product: Product) => void;
 }
 
-const formatPrice = (precio: number) =>
-  new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(precio);
-
 const ProductRow = memo(function ProductRow({ product, onEdit, onDelete }: ProductRowProps) {
+  const navigate = useNavigate();
+  const isZapato = product.tipo === ProductType.ZAPATO;
+
   return (
     <tr className="hover:bg-gray-50 transition-colors">
-      <td className="px-4 py-3 text-sm text-gray-800">{product.nombre}</td>
-      <td className="px-4 py-3 text-sm text-gray-600">{product.color}</td>
-      <td className="px-4 py-3 text-sm text-gray-600">{product.talla ?? '—'}</td>
-      <td className="px-4 py-3">
-        <span
-          className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${
-            product.tipo === ProductType.ZAPATO
-              ? 'bg-blue-100 text-blue-700'
-              : 'bg-purple-100 text-purple-700'
-          }`}
+      <td className="px-3 py-2 w-14">
+        <ProductThumbnail
+          foto={product.foto}
+          tipo={product.tipo}
+          nombre={product.nombre}
+          onClick={() => navigate(`/products/${product.id}`)}
+        />
+      </td>
+      {/* Nombre */}
+      <td className="px-4 py-3 text-sm">
+        <button
+          onClick={() => navigate(`/products/${product.id}`)}
+          className="font-medium text-gray-900 hover:text-indigo-600 transition-colors text-left"
         >
-          {product.tipo}
-        </span>
+          {product.nombre}
+        </button>
+      </td>
+      <td className="px-4 py-3 text-sm text-gray-600">{product.color.nombre}</td>
+      <td className="px-4 py-3 text-sm text-gray-600">
+        {isZapato ? (product.talla?.valor ?? '—') : <span className="text-gray-400 italic text-xs">N/A</span>}
+      </td>
+      <td className="px-4 py-3">
+        <ProductTypeBadge tipo={product.tipo} />
       </td>
       <td className="px-4 py-3 text-sm font-medium text-gray-800">{formatPrice(product.precio)}</td>
       <td className="px-4 py-3">
@@ -42,18 +57,14 @@ const ProductRow = memo(function ProductRow({ product, onEdit, onDelete }: Produ
             className="p-1.5 text-indigo-600 hover:bg-indigo-50 rounded transition-colors"
             title="Editar"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-            </svg>
+            <EditIcon />
           </button>
           <button
             onClick={() => onDelete(product)}
             className="p-1.5 text-red-600 hover:bg-red-50 rounded transition-colors"
             title="Eliminar"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-            </svg>
+            <TrashIcon />
           </button>
         </div>
       </td>
@@ -62,11 +73,15 @@ const ProductRow = memo(function ProductRow({ product, onEdit, onDelete }: Produ
 });
 
 export function ProductTable({ products, onEdit, onDelete }: ProductTableProps) {
+  // rerender-memo: avoid creating a new sorted array on every parent re-render
+  const sorted = useMemo(() => products.toSorted((a, b) => b.id - a.id), [products]);
+
   return (
     <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white">
       <table className="w-full text-left">
         <thead className="bg-gray-50 text-xs uppercase tracking-wide text-gray-500 border-b border-gray-200">
           <tr>
+            <th className="px-3 py-3 w-14"></th>
             <th className="px-4 py-3">Nombre</th>
             <th className="px-4 py-3">Color</th>
             <th className="px-4 py-3">Talla</th>
@@ -76,7 +91,7 @@ export function ProductTable({ products, onEdit, onDelete }: ProductTableProps) 
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-100">
-          {products.toSorted((a, b) => b.id - a.id).map((product) => (
+          {sorted.map((product) => (
             <ProductRow key={product.id} product={product} onEdit={onEdit} onDelete={onDelete} />
           ))}
         </tbody>

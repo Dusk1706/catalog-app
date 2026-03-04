@@ -11,15 +11,35 @@ enum ProductType {
   BOLSA
 }
 
+model Color {
+  id       Int       @id @default(autoincrement())
+  nombre   String    @unique
+  products Product[]
+
+  @@map("colores")
+}
+
+model Talla {
+  id       Int       @id @default(autoincrement())
+  valor    String    @unique
+  products Product[]
+
+  @@map("tallas")
+}
+
 model Product {
-  id        Int         @id @default(autoincrement())
-  nombre    String
-  color     String
-  talla     String?
-  tipo      ProductType
-  precio    Float
-  createdAt DateTime    @default(now()) @map("created_at")
-  updatedAt DateTime    @updatedAt @map("updated_at")
+  id          Int         @id @default(autoincrement())
+  nombre      String
+  colorId     Int         @map("color_id")
+  color       Color       @relation(fields: [colorId], references: [id])
+  tallaId     Int?        @map("talla_id")
+  talla       Talla?      @relation(fields: [tallaId], references: [id])
+  tipo        ProductType
+  precio      Float
+  foto        String?
+  descripcion String?
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
 
   @@map("products")
 }
