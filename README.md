@@ -1,6 +1,6 @@
 # Catálogo de Productos
 
-CRUD de productos (zapatos y bolsas) con NestJS + Prisma + PostgreSQL y frontend en React + Vite + Tailwind CSS.
+CRUD de productos (zapatos y bolsas) con **NestJS + Prisma + PostgreSQL** y **React + Vite + Tailwind CSS**.
 
 ## Requisitos
 
@@ -10,27 +10,41 @@ CRUD de productos (zapatos y bolsas) con NestJS + Prisma + PostgreSQL y frontend
 ## Instalación
 
 ```bash
-# Base de datos
-docker-compose up -d
+# Levantar todo con Docker
+docker-compose up -d --build
 
-# Backend
+# O desarrollo local:
+docker-compose up -d postgres          # Solo BD
+
 cd backend
 cp .env.example .env
 npm install
 npx prisma migrate dev
-npm run start:dev         # http://localhost:3000
+npm run start:dev                       # http://localhost:3000
 
-# Frontend (otra terminal)
-cd frontend
+cd ../frontend
 npm install
-npm run dev               # http://localhost:5173
+npm run dev                             # http://localhost:5173
+```
+
+## Seeders
+
+Carga colores, tallas y productos de ejemplo (ejecutar una sola vez):
+
+```bash
+# Desarrollo local
+cd backend
+npx prisma db seed
+
+# Docker (con los contenedores levantados)
+docker exec catalog_backend node dist/prisma/seed.js
 ```
 
 ## Variables de Entorno
 
 Configurar en `backend/.env`:
 
-```
+```env
 DATABASE_URL=postgresql://catalog_user:catalog_pass@localhost:5432/catalog_db
 PORT=3000
 CORS_ORIGIN=http://localhost:5173
