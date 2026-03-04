@@ -8,7 +8,7 @@ interface SearchBarProps {
 
 export function SearchBar({ onSearch, placeholder = 'Buscar por nombre o color…' }: SearchBarProps) {
   const [value, setValue] = useState('');
-  const timerRef = useRef<ReturnType<typeof setTimeout>>();
+  const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;

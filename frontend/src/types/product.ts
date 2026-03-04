@@ -1,7 +1,9 @@
-export enum ProductType {
-  ZAPATO = 'ZAPATO',
-  BOLSA = 'BOLSA',
-}
+export const ProductType = {
+  ZAPATO: 'ZAPATO',
+  BOLSA: 'BOLSA',
+} as const;
+
+export type ProductType = (typeof ProductType)[keyof typeof ProductType];
 
 export interface Color {
   id: number;
