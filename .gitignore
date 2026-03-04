@@ -1,10 +1,12 @@
 # Nestjs specific
-/dist
+backend/dist
 backend/node_modules
-frontend/node_modules
 backend/generated
-/build
-/tmp
+backend/build
+backend/tmp
+
+# React specific
+frontend/node_modules
 
 # Logs
 logs
