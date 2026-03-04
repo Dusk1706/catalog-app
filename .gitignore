@@ -1,6 +1,8 @@
 # Nestjs specific
 /dist
-/node_modules
+backend/node_modules
+frontend/node_modules
+backend/generated
 /build
 /tmp
 
@@ -22,3 +24,6 @@ lerna-debug.log*
 # temp directory
 .temp
 .tmp
+
+.agents
+
