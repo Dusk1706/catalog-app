@@ -1,6 +1,9 @@
+import 'dotenv/config';
 import { PrismaClient, ProductType } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
 
-const prisma = new PrismaClient();
+const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
+const prisma = new PrismaClient({ adapter });
 
 const products = [
   { nombre: 'Bota de Cuero', color: 'Negro', talla: '28', tipo: ProductType.ZAPATO, precio: 1299.99 },
