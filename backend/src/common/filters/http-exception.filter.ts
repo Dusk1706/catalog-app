@@ -6,7 +6,7 @@ import {
   HttpStatus,
   Logger,
 } from '@nestjs/common';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
@@ -15,6 +15,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost): void {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
+    const request = ctx.getRequest<Request>();
 
     const status =
       exception instanceof HttpException
@@ -28,7 +29,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     if (status >= 500) {
       this.logger.error(
-        `Internal server error: ${exception instanceof Error ? exception.message : 'Unknown'}`,
+        `[${request.method}] ${request.url} — ${exception instanceof Error ? exception.message : 'Unknown'}`,
         exception instanceof Error ? exception.stack : undefined,
       );
     }
@@ -40,6 +41,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
           ? message
           : (message as Record<string, unknown>).message || message,
       timestamp: new Date().toISOString(),
+      path: request.url,
     });
   }
 }
