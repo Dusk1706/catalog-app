@@ -4,6 +4,7 @@ backend/node_modules
 backend/generated
 backend/build
 backend/tmp
+backend/uploads
 
 # React specific
 frontend/node_modules
